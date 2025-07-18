@@ -121,6 +121,10 @@ func (s *Stream) CallTools() []proto.ToolCallStatus {
 	calls := s.message.Choices[0].Message.ToolCalls
 	statuses := make([]proto.ToolCallStatus, 0, len(calls))
 	for _, call := range calls {
+		// 检查call ID是否为空或只包含空格
+		if call.ID == "" || strings.TrimSpace(call.ID) == "" {
+			continue
+		}
 		msg, status := stream.CallTool(
 			call.ID,
 			call.Function.Name,
